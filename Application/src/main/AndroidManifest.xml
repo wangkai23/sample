@@ -17,12 +17,16 @@
 <manifest package="com.android.multiwindowplayground"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MultiWindowSampleTheme">
+
         <!-- The launcher Activity that is started when the application is first started.
          Note that we are setting the task affinity to "" to ensure each activity is launched
          into a separate task stack. -->

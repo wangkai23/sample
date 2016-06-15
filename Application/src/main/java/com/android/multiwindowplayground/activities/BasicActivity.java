@@ -18,10 +18,17 @@ package com.android.multiwindowplayground.activities;
 
 import com.android.multiwindowplayground.R;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.LinkProperties;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
+import android.widget.Toast;
 
 /**
  * This activity is the most basic, simeple use case and is to be launched without any special
@@ -38,6 +45,7 @@ public class BasicActivity extends LoggingActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logging);
 
+        testNetworkChange(this);
         // Set the color and description
         setDescription(R.string.activity_description_basic);
         setBackgroundColor(R.color.gray);
@@ -79,5 +87,50 @@ public class BasicActivity extends LoggingActivity {
                 return true;
             }
         });
+    }
+
+
+    void testNetworkChange(final Context context) {
+
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkRequest request = new NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI).build();
+
+        ConnectivityManager.NetworkCallback callback = new ConnectivityManager.NetworkCallback() {
+
+            @Override
+            public void onAvailable(Network network) {
+                super.onAvailable(network);
+
+                android.util.Log.d("test", "WIFI_ENV: " + network.toString());
+            }
+
+            @Override
+            public void onLosing(Network network, int maxMsToLive) {
+                super.onLosing(network, maxMsToLive);
+            }
+
+            @Override
+            public void onLost(Network network) {
+                super.onLost(network);
+
+                String networkType = network.toString();
+                android.util.Log.d("test", "LOST WIFI_ENV: " + networkType);
+            }
+
+            @Override
+            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+                super.onCapabilitiesChanged(network, networkCapabilities);
+            }
+
+            @Override
+            public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
+                super.onLinkPropertiesChanged(network, linkProperties);
+            }
+        };
+
+        connMgr.registerNetworkCallback(request, callback);
+
     }
 }
